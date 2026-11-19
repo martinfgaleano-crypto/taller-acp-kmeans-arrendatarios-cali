@@ -1,0 +1,5 @@
+﻿Paso,Hogares-mes (muestra),Hogares en un mes promedio,Motivo
+Arrendatarios de Cali A.M. (GEIH 2025),5279,452654,AREA = 76 y P5090 = 3
+Con canon válido,5265,451465,Se excluye P5140 = 98/99 (no sabe / no informa)
+Con ingreso completo,5045,432468,Ocupado sin ingreso laboral o monto de otro ingreso sin dato
+Con ingreso positivo,4968,425862,Ingreso = 0 no permite calcular la carga del arriendo
