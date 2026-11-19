@@ -14,6 +14,8 @@ Autor: Martin Felipe Galeano Maya
 
 En Cali A.M. viven en arriendo cerca de **452.654 hogares** en un mes promedio de 2025. La política de vivienda suele clasificarlos por una sola variable, su ingreso en salarios mínimos (SMMLV). Pero dos hogares con el mismo ingreso pueden tener situaciones muy distintas: un hogar de dos personas con empleo formal no se parece a una familia de cinco con un solo perceptor informal.
 
+**Relación con mi Capstone.** Este tema viene de mi proyecto de Capstone I, donde estudiamos qué barreras económicas impiden que los hogares que arriendan en Cali A.M. compren vivienda; allí la población objetivo son los hogares de 2 a 4 SMMLV. Este taller usa la misma fuente pública (GEIH 2025), pero hace una pregunta distinta y la responde con aprendizaje no supervisado. Su resultado sirve para afinar esa población objetivo.
+
 > **Pregunta:** ¿qué perfiles de hogares arrendatarios existen en Cali A.M. y en qué se diferencian sus condiciones para avanzar hacia la vivienda propia?
 
 **Por qué ACP y K-Means.** Las condiciones del hogar están correlacionadas: ingreso por persona, número de perceptores, cotización a pensión y carga del arriendo se mueven juntas. El ACP resume esa información en pocas dimensiones interpretables. K-Means busca grupos de hogares con combinaciones parecidas sin imponer un corte de ingreso de antemano. Comparar esos grupos con las bandas de SMMLV permite evaluar si la clasificación por ingreso esconde perfiles distintos.
