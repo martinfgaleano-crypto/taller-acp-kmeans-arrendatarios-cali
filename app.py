@@ -1,6 +1,9 @@
 """¿Quiénes son los hogares que viven en arriendo en Cali A.M.?
 ACP y K-Means sobre la GEIH 2025 · Taller individual, Machine Learning aplicado a Economía y Finanzas.
 """
+import os
+
+os.environ.setdefault("OMP_NUM_THREADS", "1")  # menos picos de CPU en Streamlit Cloud
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -297,9 +300,13 @@ elif pagina == "5. Segmentación K-Means":
                 "los segmentos existen, pero sus bordes son difusos.</div>", unsafe_allow_html=True)
 
     st.markdown("### ¿Son estables los segmentos?")
-    with st.spinner("Probando la estabilidad de la segmentación…"):
-        est = evaluacion_estabilidad(tuple(variables), recorte, n_comp, k, ponderar)
-    st.dataframe(est.style.format({"ARI promedio": "{:.3f}", "ARI mínimo": "{:.3f}"}), width="stretch", hide_index=True)
+    st.markdown("Se vuelve a correr K-Means con otras semillas, con submuestras del 80 % de los hogares, sin ponderación y con todas las variables, "
+                "y se compara cada resultado con la segmentación elegida.")
+    if st.button("Ejecutar la prueba de estabilidad", type="primary") or st.session_state.get("estabilidad_vista"):
+        st.session_state["estabilidad_vista"] = True
+        with st.spinner("Probando la estabilidad de la segmentación (unos segundos)…"):
+            est = evaluacion_estabilidad(tuple(variables), recorte, n_comp, k, ponderar)
+        st.dataframe(est.style.format({"ARI promedio": "{:.3f}", "ARI mínimo": "{:.3f}"}), width="stretch", hide_index=True)
     st.markdown("<p class='nota'>Índice de Rand ajustado (ARI): 1 = misma partición; 0 = coincidencia por azar. Una silueta moderada no implica grupos inestables: "
                 "la partición se repite casi igual con otras semillas y submuestras.</p>", unsafe_allow_html=True)
 

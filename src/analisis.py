@@ -112,7 +112,7 @@ def componentes_sugeridos(res: ResultadoACP, umbral_acum=0.70) -> dict:
 def evaluar_k(X: np.ndarray, pesos, ks=range(2, 9)) -> pd.DataFrame:
     filas = []
     for k in ks:
-        km = KMeans(k, n_init=20, random_state=SEMILLA).fit(X, sample_weight=pesos)
+        km = KMeans(k, n_init=5, random_state=SEMILLA).fit(X, sample_weight=pesos)
         sil = silhouette_score(X, km.labels_, sample_size=min(3000, len(X)), random_state=SEMILLA)
         filas.append({"K": k, "Inercia": km.inertia_, "Silueta": sil})
     return pd.DataFrame(filas)
@@ -190,10 +190,10 @@ def estabilidad(X: np.ndarray, pesos, k: int, etiquetas: np.ndarray, Z_completo:
         w = None if pesos is None else np.asarray(pesos)[idx]
         sub.append(ari(etiquetas[idx], KMeans(k, n_init=5, random_state=b).fit(X[idx], sample_weight=w).labels_))
     filas.append({"Prueba": "20 submuestras del 80 % de los hogares", "ARI promedio": np.mean(sub), "ARI mínimo": np.min(sub)})
-    alt = ari(etiquetas, KMeans(k, n_init=50, random_state=SEMILLA).fit(X, sample_weight=None if pesos is not None else np.ones(len(X))).labels_)
+    alt = ari(etiquetas, KMeans(k, n_init=20, random_state=SEMILLA).fit(X, sample_weight=None if pesos is not None else np.ones(len(X))).labels_)
     filas.append({"Prueba": "Cambiar la ponderación (con ↔ sin FEX_C18)", "ARI promedio": alt, "ARI mínimo": alt})
     if Z_completo is not None:
-        z = ari(etiquetas, KMeans(k, n_init=50, random_state=SEMILLA).fit(Z_completo, sample_weight=pesos).labels_)
+        z = ari(etiquetas, KMeans(k, n_init=20, random_state=SEMILLA).fit(Z_completo, sample_weight=pesos).labels_)
         filas.append({"Prueba": "Usar todas las variables estandarizadas en vez de los componentes", "ARI promedio": z, "ARI mínimo": z})
     return pd.DataFrame(filas)
 
