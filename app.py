@@ -45,7 +45,7 @@ def datos_crudos():
 
 
 # ----------------------------------------------------------------------------- controles
-st.sidebar.title("🏠 Arrendatarios de Cali")
+st.sidebar.title("Arrendatarios de Cali")
 st.sidebar.caption("ACP + K-Means · GEIH 2025")
 pagina = st.sidebar.radio("Navegación", ["1. Contexto", "2. Exploración de datos", "3. Preparación",
                                           "4. Componentes principales", "5. Segmentación K-Means",
@@ -157,7 +157,7 @@ elif pagina == "2. Exploración de datos":
     fig = px.imshow(corr, text_auto=".2f", color_continuous_scale="RdBu_r", zmin=-1, zmax=1, aspect="auto",
                     title="Correlación de Pearson entre las variables del modelo")
     st.plotly_chart(fig, width="stretch")
-    st.markdown("<div class='caja'><b>Lectura.</b> El ingreso por persona se asocia de forma negativa con la carga del arriendo y de forma positiva con la "
+    st.markdown("<div class='caja'>El ingreso por persona se asocia de forma negativa con la carga del arriendo y de forma positiva con la "
                 "proporción de perceptores y la cotización. El tamaño del hogar y el hacinamiento se mueven juntos y en sentido opuesto al ingreso por persona. "
                 "Estas correlaciones moderadas justifican el ACP: hay información redundante que puede resumirse.</div>", unsafe_allow_html=True)
     st.caption(FUENTE)
@@ -373,10 +373,10 @@ else:
 El primer componente es **capacidad económica**: ingreso por persona, número de perceptores y cotización a pensión van juntos y en sentido opuesto a la carga del arriendo. El segundo separa **hogares grandes y hacinados** de hogares pequeños con más presión relativa. El tercero recoge el **ciclo de vida** (edad). Con {n_comp} componentes se conserva el **{num(100*var_ret,1)} %** de la variación de las {len(variables)} variables.
 
 ### 2. ¿Qué segmentos aparecen?
-- **{holgado}** — {num(f(holgado,'% de arrendatarios'),1)} % de los arrendatarios. Hogares pequeños ({num(f(holgado,'Personas (promedio)'),1)} personas), ingreso por persona de {pesos(f(holgado,'Ingreso por persona (mediana)'))} y {num(f(holgado,'Perceptores que cotizan (%)'),0)} % de perceptores cotizando. Carga mediana de {num(f(holgado,'Carga del arriendo (mediana, %)'),1)} %.
-- **{grande}** — {num(f(grande,'% de arrendatarios'),1)} %. Familias de {num(f(grande,'Personas (promedio)'),1)} personas y {num(f(grande,'Personas por dormitorio'),1)} por dormitorio. Su ingreso del hogar ({pesos(f(grande,'Ingreso del hogar (mediana)'))}) no es bajo, pero por persona cae a {pesos(f(grande,'Ingreso por persona (mediana)'))}.
-- **{mayor}** — {num(f(mayor,'% de arrendatarios'),1)} %. Persona de referencia de {num(f(mayor,'Edad persona de referencia'),0)} años en promedio y solo {num(f(mayor,'Perceptores que cotizan (%)'),0)} % de perceptores cotizando. Carga mediana de {num(f(mayor,'Carga del arriendo (mediana, %)'),1)} %.
-- **{presion}** — {num(f(presion,'% de arrendatarios'),1)} %. Ingreso del hogar de {pesos(f(presion,'Ingreso del hogar (mediana)'))}, carga mediana de **{num(f(presion,'Carga del arriendo (mediana, %)'),0)} %** y cotización casi nula ({num(f(presion,'Perceptores que cotizan (%)'),0)} %).
+- **{holgado}**: {num(f(holgado,'% de arrendatarios'),1)} % de los arrendatarios. Hogares pequeños ({num(f(holgado,'Personas (promedio)'),1)} personas), ingreso por persona de {pesos(f(holgado,'Ingreso por persona (mediana)'))} y {num(f(holgado,'Perceptores que cotizan (%)'),0)} % de perceptores cotizando. Carga mediana de {num(f(holgado,'Carga del arriendo (mediana, %)'),1)} %.
+- **{grande}**: {num(f(grande,'% de arrendatarios'),1)} %. Familias de {num(f(grande,'Personas (promedio)'),1)} personas y {num(f(grande,'Personas por dormitorio'),1)} por dormitorio. Su ingreso del hogar ({pesos(f(grande,'Ingreso del hogar (mediana)'))}) no es bajo, pero por persona cae a {pesos(f(grande,'Ingreso por persona (mediana)'))}.
+- **{mayor}**: {num(f(mayor,'% de arrendatarios'),1)} %. Persona de referencia de {num(f(mayor,'Edad persona de referencia'),0)} años en promedio y solo {num(f(mayor,'Perceptores que cotizan (%)'),0)} % de perceptores cotizando. Carga mediana de {num(f(mayor,'Carga del arriendo (mediana, %)'),1)} %.
+- **{presion}**: {num(f(presion,'% de arrendatarios'),1)} %. Ingreso del hogar de {pesos(f(presion,'Ingreso del hogar (mediana)'))}, carga mediana de **{num(f(presion,'Carga del arriendo (mediana, %)'),0)} %** y cotización casi nula ({num(f(presion,'Perceptores que cotizan (%)'),0)} %).
 
 ### 3. La misma banda de ingreso esconde situaciones distintas
 De los hogares con ingreso entre 2 y 4 salarios mínimos, **{num(comp.iloc[0],0)} %** pertenecen a «{comp.index[0]}», **{num(comp.iloc[1],0)} %** a «{comp.index[1]}» y **{num(comp.iloc[2],0)} %** a «{comp.index[2]}». Dos hogares con el mismo ingreso total pueden tener un ingreso por persona que difiere en más del doble y una cotización muy diferente. Para una política de acceso a vivienda, esto significa que un subsidio definido solo por ingreso trataría igual a hogares con capacidades de pago y de acceso al crédito muy distintas.

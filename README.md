@@ -5,8 +5,8 @@
 Taller individual · Machine Learning aplicado a Economía y Finanzas · Pontificia Universidad Javeriana Cali
 Autor: Martin Felipe Galeano Maya
 
-🔗 **Aplicación:** _[enlace de Streamlit Community Cloud]_
-🎥 **Video de sustentación:** _[enlace]_
+**Aplicación:** https://arrendatarios-cali.streamlit.app
+**Video de sustentación:** _(pendiente)_
 
 ---
 
@@ -47,9 +47,9 @@ En Cali A.M. viven en arriendo cerca de **452.654 hogares** en un mes promedio d
 
 ## 3. Metodología
 
-1. **Preparación.** Se excluyen 14 hogares con canon 98/99, 220 con ingreso incompleto y 77 con ingreso cero (4.968 quedan). No hay duplicados. La carga se recorta en 100 % para que unos pocos hogares con ingreso muy bajo no dominen las distancias (la carga original se conserva en los perfiles). Luego se aplican logaritmo al ingreso por persona y estandarización (media 0, desviación 1).
-2. **ACP.** Se usan autovalores, varianza explicada y acumulada, gráfico de sedimentación, cargas y biplot. Se conservan **3 componentes** (criterio de Kaiser, autovalor > 1), que resumen el **73,5 %** de la varianza.
-3. **K-Means** sobre los 3 componentes, ponderado con `FEX_C18`, con semilla 42 y 50 inicializaciones. Se compara K = 2…8 con el método del codo y la silueta. Se eligió **K = 4**.
+1. **Preparación.** Excluí 14 hogares con canon 98/99, 220 con ingreso incompleto y 77 con ingreso cero (quedan 4.968). No hay duplicados. Recorté la carga en 100 % para que unos pocos hogares con ingreso muy bajo no dominen las distancias (la carga original se conserva en los perfiles). Después apliqué logaritmo al ingreso por persona y estandaricé todas las variables (media 0, desviación 1).
+2. **ACP.** Se usan autovalores, varianza explicada y acumulada, gráfico de sedimentación, cargas y biplot. Conservé **3 componentes** (criterio de Kaiser, autovalor > 1), que resumen el **73,5 %** de la varianza.
+3. **K-Means** sobre los 3 componentes, ponderado con `FEX_C18`, con semilla 42 y 50 inicializaciones. Comparé K = 2…8 con el método del codo y la silueta, y elegí **K = 4**.
 4. **Perfiles** con las variables originales: medianas ponderadas para montos y promedios ponderados para composición.
 
 ## 4. Resultados principales
@@ -79,7 +79,7 @@ En Cali A.M. viven en arriendo cerca de **452.654 hogares** en un mes promedio d
 
 ![Segmentos en el plano CP1–CP2](docs/figuras/segmentos_plano.png)
 
-**Hallazgo central.** Los hogares con ingreso entre 2 y 4 SMMLV (la banda en la que suelen enfocarse los programas de compra de vivienda) **no forman un grupo homogéneo**: 45 % son hogares pequeños con ingreso formal, 37 % familias numerosas con ingreso diluido y 17 % hogares con jefatura mayor y baja cotización. Con el mismo ingreso total, su ingreso por persona y su cotización difieren mucho. Para el acceso al crédito y la capacidad de pago, eso importa.
+**Lo que más me llamó la atención.** Los hogares con ingreso entre 2 y 4 SMMLV (la banda en la que suelen enfocarse los programas de compra de vivienda) **no forman un grupo homogéneo**: 45 % son hogares pequeños con ingreso formal, 37 % familias numerosas con ingreso diluido y 17 % hogares con jefatura mayor y baja cotización. Con el mismo ingreso total, su ingreso por persona y su cotización difieren mucho. Para el acceso al crédito y la capacidad de pago, eso importa.
 
 ![Bandas de ingreso por segmento](docs/figuras/bandas_segmentos.png)
 
