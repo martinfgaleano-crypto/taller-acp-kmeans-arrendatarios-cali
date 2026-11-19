@@ -6,7 +6,7 @@ Taller individual · Machine Learning aplicado a Economía y Finanzas · Pontifi
 Autor: Martin Felipe Galeano Maya
 
 **Aplicación:** https://arrendatarios-cali.streamlit.app
-**Video de sustentación:** _(pendiente)_
+**Video de sustentación:** https://youtu.be/ogbg3QOZaJY
 
 ---
 
