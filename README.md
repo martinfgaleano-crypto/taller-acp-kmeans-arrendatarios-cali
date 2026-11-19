@@ -49,7 +49,7 @@ En Cali A.M. viven en arriendo cerca de **452.654 hogares** en un mes promedio d
 
 1. **Preparación.** Excluí 14 hogares con canon 98/99, 220 con ingreso incompleto y 77 con ingreso cero (quedan 4.968). No hay duplicados. Recorté la carga en 100 % para que unos pocos hogares con ingreso muy bajo no dominen las distancias (la carga original se conserva en los perfiles). Después apliqué logaritmo al ingreso por persona y estandaricé todas las variables (media 0, desviación 1).
 2. **ACP.** Se usan autovalores, varianza explicada y acumulada, gráfico de sedimentación, cargas y biplot. Conservé **3 componentes** (criterio de Kaiser, autovalor > 1), que resumen el **73,5 %** de la varianza.
-3. **K-Means** sobre los 3 componentes, ponderado con `FEX_C18`, con semilla 42 y 50 inicializaciones. Comparé K = 2…8 con el método del codo y la silueta, y elegí **K = 4**.
+3. **K-Means** sobre los 3 componentes, ponderado con `FEX_C18`, con semilla 42 y 20 inicializaciones. Comparé K = 2…8 con el método del codo y la silueta, y elegí **K = 4**.
 4. **Perfiles** con las variables originales: medianas ponderadas para montos y promedios ponderados para composición.
 
 ## 4. Resultados principales

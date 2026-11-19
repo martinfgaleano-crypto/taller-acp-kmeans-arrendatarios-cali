@@ -44,6 +44,31 @@ def datos_crudos():
     return A.cargar()
 
 
+@st.cache_data(show_spinner=False)
+def modelo(variables: tuple, recorte: float, n_comp: int | None, k: int, ponderar: bool):
+    """Toda la cadena (preparación → ACP → K-Means) en caché por combinación de parámetros."""
+    df, bit = A.preparar(datos_crudos(), recorte)
+    res = A.acp(df, list(variables))
+    sug = A.componentes_sugeridos(res)
+    n = n_comp or sug["sugerido"]
+    X = res.scores[:, :n]
+    w = df.factor_expansion.values if ponderar else None
+    etq, sil, _ = A.kmeans(X, k, w)
+    return df, bit, res, sug, n, X, w, etq, sil
+
+
+@st.cache_data(show_spinner=False)
+def evaluacion_k(variables: tuple, recorte: float, n_comp: int, ponderar: bool):
+    df, _, res, _, _, X, w, _, _ = modelo(variables, recorte, n_comp, 4, ponderar)
+    return A.evaluar_k(X, w)
+
+
+@st.cache_data(show_spinner=False)
+def evaluacion_estabilidad(variables: tuple, recorte: float, n_comp: int, k: int, ponderar: bool):
+    _, _, res, _, _, X, w, etq, _ = modelo(variables, recorte, n_comp, k, ponderar)
+    return A.estabilidad(X, w, k, etq, res.Z)
+
+
 # ----------------------------------------------------------------------------- controles
 st.sidebar.title("Arrendatarios de Cali")
 st.sidebar.caption("ACP + K-Means · GEIH 2025")
@@ -59,18 +84,15 @@ if len(variables) < 4:
 recorte = st.sidebar.slider("Recorte de la carga del arriendo (%)", 60, 300, 100, 10,
                             help="Cargas por encima de este valor se fijan en el límite para que pocos hogares con ingreso muy bajo no dominen la distancia.")
 raw = datos_crudos()
-df, bitacora = A.preparar(raw, recorte)
-res = A.acp(df, variables)
-sug = A.componentes_sugeridos(res)
+_, _, _, sug, _, _, _, _, _ = modelo(tuple(variables), recorte, None, 4, True)
 n_comp = st.sidebar.slider("Componentes que se conservan", 2, len(variables), sug["sugerido"],
                            help=f"Sugerido por los datos: {sug['sugerido']} (Kaiser = {sug['kaiser']}; ≥70 % acumulado = {sug['acumulado']}).")
 k = st.sidebar.slider("Número de segmentos (K)", 2, 8, 4)
 ponderar = st.sidebar.toggle("Ponderar K-Means con el factor de expansión", value=True)
 st.sidebar.caption("Configuración por defecto: 7 variables, recorte 100 %, componentes de Kaiser, K = 4, ponderado.")
 
-X = res.scores[:, :n_comp]
-w = df.factor_expansion.values if ponderar else None
-etiquetas, sil, modelo = A.kmeans(X, k, w)
+df, bitacora, res, sug, n_comp, X, w, etiquetas, sil = modelo(tuple(variables), recorte, n_comp, k, ponderar)
+df = df.copy()
 df["cluster"] = etiquetas
 df["silueta"] = sil
 nombres = A.nombrar(df, variables)
@@ -255,9 +277,9 @@ elif pagina == "4. Componentes principales":
 elif pagina == "5. Segmentación K-Means":
     st.title("Segmentación con K-Means")
     st.markdown(f"K-Means se aplica sobre los **{n_comp} componentes conservados** ({num(100*var_ret,1)} % de la varianza), "
-                f"{'ponderando cada hogar con su factor de expansión' if ponderar else 'sin ponderar'}. Semilla fija = {A.SEMILLA}, 50 inicializaciones.")
+                f"{'ponderando cada hogar con su factor de expansión' if ponderar else 'sin ponderar'}. Semilla fija = {A.SEMILLA}, 20 inicializaciones.")
     with st.spinner("Comparando valores de K…"):
-        ev = A.evaluar_k(X, w)
+        ev = evaluacion_k(tuple(variables), recorte, n_comp, ponderar)
     a, b = st.columns(2)
     fig = px.line(ev, x="K", y="Inercia", markers=True, title="Método del codo: inercia intra-segmento" + (" (ponderada)" if ponderar else ""))
     fig.add_vline(x=k, line_dash="dot", annotation_text=f"K = {k}")
@@ -276,7 +298,7 @@ elif pagina == "5. Segmentación K-Means":
 
     st.markdown("### ¿Son estables los segmentos?")
     with st.spinner("Probando la estabilidad de la segmentación…"):
-        est = A.estabilidad(X, w, k, etiquetas, res.Z)
+        est = evaluacion_estabilidad(tuple(variables), recorte, n_comp, k, ponderar)
     st.dataframe(est.style.format({"ARI promedio": "{:.3f}", "ARI mínimo": "{:.3f}"}), width="stretch", hide_index=True)
     st.markdown("<p class='nota'>Índice de Rand ajustado (ARI): 1 = misma partición; 0 = coincidencia por azar. Una silueta moderada no implica grupos inestables: "
                 "la partición se repite casi igual con otras semillas y submuestras.</p>", unsafe_allow_html=True)

@@ -119,7 +119,7 @@ def evaluar_k(X: np.ndarray, pesos, ks=range(2, 9)) -> pd.DataFrame:
 
 
 def kmeans(X: np.ndarray, k: int, pesos) -> tuple[np.ndarray, np.ndarray, KMeans]:
-    km = KMeans(k, n_init=50, random_state=SEMILLA).fit(X, sample_weight=pesos)
+    km = KMeans(k, n_init=20, random_state=SEMILLA).fit(X, sample_weight=pesos)
     return km.labels_, silhouette_samples(X, km.labels_), km
 
 
@@ -181,14 +181,14 @@ def estabilidad(X: np.ndarray, pesos, k: int, etiquetas: np.ndarray, Z_completo:
     """
     from sklearn.metrics import adjusted_rand_score as ari
     filas = []
-    semillas = [ari(etiquetas, KMeans(k, n_init=10, random_state=s).fit(X, sample_weight=pesos).labels_) for s in range(10)]
+    semillas = [ari(etiquetas, KMeans(k, n_init=5, random_state=s).fit(X, sample_weight=pesos).labels_) for s in range(1, 11)]
     filas.append({"Prueba": "Otras 10 semillas aleatorias", "ARI promedio": np.mean(semillas), "ARI mínimo": np.min(semillas)})
     rng = np.random.default_rng(SEMILLA)
     sub = []
     for b in range(20):
         idx = rng.choice(len(X), int(0.8 * len(X)), replace=False)
         w = None if pesos is None else np.asarray(pesos)[idx]
-        sub.append(ari(etiquetas[idx], KMeans(k, n_init=10, random_state=b).fit(X[idx], sample_weight=w).labels_))
+        sub.append(ari(etiquetas[idx], KMeans(k, n_init=5, random_state=b).fit(X[idx], sample_weight=w).labels_))
     filas.append({"Prueba": "20 submuestras del 80 % de los hogares", "ARI promedio": np.mean(sub), "ARI mínimo": np.min(sub)})
     alt = ari(etiquetas, KMeans(k, n_init=50, random_state=SEMILLA).fit(X, sample_weight=None if pesos is not None else np.ones(len(X))).labels_)
     filas.append({"Prueba": "Cambiar la ponderación (con ↔ sin FEX_C18)", "ARI promedio": alt, "ARI mínimo": alt})
